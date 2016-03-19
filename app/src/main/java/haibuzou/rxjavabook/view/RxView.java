@@ -8,4 +8,7 @@ import haibuzou.rxjavabook.bean.AppInfo;
 public interface RxView {
 
     void setListItem(List<AppInfo> appList);
+    void showLoading();
+    void hideLoading();
+
 }

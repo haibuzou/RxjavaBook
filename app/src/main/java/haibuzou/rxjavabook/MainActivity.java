@@ -6,8 +6,10 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -22,11 +24,12 @@ import haibuzou.rxjavabook.presenter.RxPresenter;
 import haibuzou.rxjavabook.view.RxView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,RxView {
+        implements NavigationView.OnNavigationItemSelectedListener,RxView,SwipeRefreshLayout.OnRefreshListener {
 
     RecyclerView recyclerView;
     RxPresenter rxPresenter;
     RxRecycleAdapter rxRecycleAdapter;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.rx_recycleview);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.rx_swipelayout);
         rxPresenter = new RxPresenter(this,this);
+        swipeRefreshLayout.setOnRefreshListener(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,11 +62,26 @@ public class MainActivity extends AppCompatActivity
         rxPresenter.helloWorld();
     }
 
+    @Override
+    public void onRefresh() {
+        rxPresenter.helloWorld();
+    }
 
     @Override
     public void setListItem(List<AppInfo> appList) {
         rxRecycleAdapter = new RxRecycleAdapter(appList,MainActivity.this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(rxRecycleAdapter);
+    }
+
+    @Override
+    public void showLoading() {
+        swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void hideLoading() {
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

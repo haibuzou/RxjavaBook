@@ -41,7 +41,7 @@ public class RxRecycleAdapter extends RecyclerView.Adapter<RxRecycleAdapter.RxVi
         return dataList.size();
     }
 
-    class RxViewHolder extends RecyclerView.ViewHolder{
+    public class RxViewHolder extends RecyclerView.ViewHolder{
 
         TextView nameTxt;
         ImageView logoImg;

@@ -32,6 +32,7 @@ public class RxPresenter {
 
 
     private List<AppInfo> findApps(){
+        rxView.showLoading();
         final List<AppInfo> appInfoList = new ArrayList<>();
          Observable.create(new Observable.OnSubscribe<AppInfo>() {
             @Override
@@ -68,7 +69,7 @@ public class RxPresenter {
                appInfoList.addAll(appInfos);
             }
         });
-
+        rxView.hideLoading();
         return appInfoList;
     }
 }
