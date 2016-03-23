@@ -26,12 +26,13 @@ public class RxRecycleAdapter extends RecyclerView.Adapter<RxRecycleAdapter.RxVi
 
     @Override
     public RxViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new RxViewHolder(inflater.inflate(R.layout.rx_recycle_item,parent,false));
+        return new RxViewHolder(inflater.inflate(R.layout.rx_recycle_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RxViewHolder holder, int position) {
-            holder.nameTxt.setText(dataList.get(position).mName);
+        holder.nameTxt.setText(dataList.get(position).mName);
+        if (null != dataList.get(position).mIcon)
             holder.logoImg.setImageDrawable(dataList.get(position).mIcon);
     }
 
@@ -41,13 +42,14 @@ public class RxRecycleAdapter extends RecyclerView.Adapter<RxRecycleAdapter.RxVi
         return dataList.size();
     }
 
-    public class RxViewHolder extends RecyclerView.ViewHolder{
+    public class RxViewHolder extends RecyclerView.ViewHolder {
 
         TextView nameTxt;
         ImageView logoImg;
+
         public RxViewHolder(View itemView) {
             super(itemView);
-            nameTxt =(TextView) itemView.findViewById(R.id.app_name);
+            nameTxt = (TextView) itemView.findViewById(R.id.app_name);
             logoImg = (ImageView) itemView.findViewById(R.id.app_logo);
         }
     }
