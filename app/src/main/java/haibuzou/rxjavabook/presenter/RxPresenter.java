@@ -93,12 +93,26 @@ public class RxPresenter {
      *  Zip
      *
      * 1A...2B....3C...4D
+     *
+     * 下面的例子 创建了每隔1秒发送一个数字的Observable timetoc 和 查询出来的 appObservable 进行zip 操作
+     * 具体操作规则 是将app的Name后面 添加 timetoc发射的数字，返回的值仍然是 AppInfo
      */
-//    public void getZipAppInfo(){
-//        Observable<AppInfo> appObservable = getAppInfo();
-//        Observable<Long> timetoc = Observable.interval(1,TimeUnit.SECONDS);
-//        Observable.zip(timetoc, appObservable, new Func2<Long, AppInfo, Object>() {
-//        })
+    public Observable<AppInfo> getZipAppInfo(){
+        Observable<AppInfo> appObservable = getAppInfo();
+        Observable<Long> timetoc = Observable.interval(1,TimeUnit.SECONDS);
+
+        return Observable.zip(timetoc, appObservable, new Func2<Long, AppInfo, AppInfo>() {
+            @Override
+            public AppInfo call(Long aLong, AppInfo appInfo) {
+                AppInfo newApp = new AppInfo(appInfo.mName+aLong,appInfo.mIcon);
+                return newApp;
+            }
+        });
+    }
+
+
+//    public Observable<AppInfo> getJoinAppInfo(){
+//
 //    }
 
 
