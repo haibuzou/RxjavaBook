@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:design:23.2.0'
     compile 'com.android.support:cardview-v7:21.0.3'
     compile 'io.reactivex:rxandroid:0.24.0'
+    compile 'io.reactivex:rxjava-joins:0.22.0'
 }
