@@ -1,35 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>
-
-    <item android:title="Communicate">
+    <item android:title="第一个 Observable和常用的方法">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/first_observable"
+                android:title="创建Observable" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/senior_observable"
+                android:title="更高好的写法" />
+            <item
+                android:id="@+id/timer"
+                android:title="timer 定时发送" />
+            <item
+                android:id="@+id/interval"
+                android:title="interval 轮询" />
+            <item
+                android:id="@+id/range"
+                android:title="rang 选择发送范围" />
+        </menu>
+    </item>
+
+    <item android:title="过滤Observable">
+        <menu>
+            <item
+                android:id="@+id/filter"
+                android:title="filter 条件过滤" />
+            <item
+                android:id="@+id/take"
+                android:title="take 定向获取" />
+            <item
+                android:id="@+id/takeLast"
+                android:title="takeLast 倒数的定向获取" />
+            <item
+                android:id="@+id/Distinct"
+                android:title="Distinct 过滤重复" />
+            <item
+                android:id="@+id/DistinctUntilsChanged"
+                android:title="DistinctUntilsChanged 监听数据的变化" />
+            <item
+                android:id="@+id/first"
+                android:title="first 第一个/满足条件的第一个" />
+            <item
+                android:id="@+id/firstOrDefault"
+                android:title="firstOrDefault" />
+            <item
+                android:id="@+id/skip"
+                android:title="skip 跳过" />
+            <item
+                android:id="@+id/skipLast"
+                android:title="skipLast 倒数跳过" />
+            <item
+                android:id="@+id/elementAt"
+                android:title="elementAt 指定位置" />
+            <item
+                android:id="@+id/Sample"
+                android:title="Sample 区间发送" />
+            <item
+                android:id="@+id/TimeOut"
+                android:title="TimeOut 超时设置" />
+            <item
+                android:id="@+id/debounce"
+                android:title="debounce 过滤过快数据" />
+        </menu>
+    </item>
+    <item android:title="转换Observables">
+        <menu>
+            <item
+                android:id="@+id/map"
+                android:title="map" />
+            <item
+                android:id="@+id/flatmap"
+                android:title="flatmap" />
+            <item
+                android:id="@+id/concatMap"
+                android:title="concatMap" />
+            <item
+                android:id="@+id/flatMapIterable"
+                android:title="flatMapIterable" />
+            <item
+                android:id="@+id/switchMap"
+                android:title="switchMap" />
+            <item
+                android:id="@+id/scan"
+                android:title="scan" />
+            <item
+                android:id="@+id/groupBy"
+                android:title="groupBy" />
+            <item
+                android:id="@+id/Buffer"
+                android:title="Buffer" />
+            <item
+                android:id="@+id/window"
+                android:title="window" />
+            <item
+                android:id="@+id/cast"
+                android:title="cast" />
+        </menu>
+    </item>
+    <item android:title="合并Observable">
+        <menu>
+            <item
+                android:id="@+id/merge"
+                android:title="merge" />
+            <item
+                android:id="@+id/zip"
+                android:title="zip" />
+            <item
+                android:id="@+id/join"
+                android:title="join" />
+            <item
+                android:id="@+id/combineLatest"
+                android:title="combineLatest" />
+            <item
+                android:id="@+id/and_then_when"
+                android:title="and/then/when" />
+            <item
+                android:id="@+id/switchOnNext"
+                android:title="switch" />
+            <item
+                android:id="@+id/startWith"
+                android:title="startWith" />
+
+        </menu>
+    </item>
+    <item android:title="调度器">
+        <menu>
+            <item
+                android:id="@+id/SubscribeOnandObserveOn"
+                android:title="SubscribeOn and ObserveOn" />
+            <item
+                android:id="@+id/long_task"
+                android:title="Long task" />
         </menu>
     </item>
 

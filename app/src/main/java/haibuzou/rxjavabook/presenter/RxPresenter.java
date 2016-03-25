@@ -675,7 +675,7 @@ public class RxPresenter {
 
 
     /**
-     * merge操作符
+     * merge 操作符
      * 合并多个Observable 并发射数据
      *
      * RxJava提供了mergeDelayError()，它能从一个Observable中继续发射数据即便是其中有一个抛出了错误。

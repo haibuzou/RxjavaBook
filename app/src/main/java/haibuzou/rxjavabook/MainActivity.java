@@ -90,19 +90,82 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.first_observable) {
+            rxPresenter.findApp();
+        } else if (id == R.id.senior_observable) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.timer) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.interval) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.range) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.filter) {
+
+        }else if (id == R.id.take) {
+
+        }else if (id == R.id.takeLast) {
+
+        }else if (id == R.id.Distinct) {
+
+        }else if (id == R.id.DistinctUntilsChanged) {
+
+        }else if (id == R.id.first) {
+
+        }else if (id == R.id.firstOrDefault) {
+
+        }else if (id == R.id.skip) {
+
+        }else if (id == R.id.skipLast) {
+
+        }else if (id == R.id.elementAt) {
+
+        }else if (id == R.id.Sample) {
+
+        }else if (id == R.id.TimeOut) {
+
+        }else if (id == R.id.debounce) {
+
+        }else if (id == R.id.map) {
+
+        }else if (id == R.id.flatmap) {
+
+        }else if (id == R.id.concatMap) {
+
+        }else if (id == R.id.flatMapIterable) {
+
+        }else if (id == R.id.switchMap) {
+
+        }else if (id == R.id.scan) {
+
+        }else if (id == R.id.groupBy) {
+
+        }else if (id == R.id.Buffer) {
+
+        }else if (id == R.id.window) {
+
+        }else if (id == R.id.cast) {
+
+        }else if (id == R.id.merge) {
+
+        }else if (id == R.id.zip) {
+
+        }else if (id == R.id.join) {
+
+        }else if (id == R.id.combineLatest) {
+
+        }else if (id == R.id.and_then_when) {
+
+        }else if (id == R.id.switchOnNext) {
+
+        }else if (id == R.id.startWith) {
+
+        }else if (id == R.id.SubscribeOnandObserveOn) {
+
+        }else if (id == R.id.long_task) {
 
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
