@@ -55,6 +55,18 @@ public class RxPresenter {
     }
 
 
+    public void findAppSenior(){
+        rxView.setListItem(getAppInfo().toList().toBlocking().single());
+    }
+
+    public void findTimerApp(){
+        rxView.setListItem(getTimerAppInfo().toList().toBlocking().single());
+    }
+
+    public void findIntervalApp(){
+        rxView.setListItem(getIntervalAppInfo().toList().toBlocking().single());
+    }
+
 
 
     /**

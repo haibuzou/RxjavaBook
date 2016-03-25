@@ -93,11 +93,11 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.first_observable) {
             rxPresenter.findApp();
         } else if (id == R.id.senior_observable) {
-
+            rxPresenter.findAppSenior();
         } else if (id == R.id.timer) {
-
+            rxPresenter.findTimerApp();
         } else if (id == R.id.interval) {
-
+            rxPresenter.findIntervalApp();
         } else if (id == R.id.range) {
 
         } else if (id == R.id.filter) {
