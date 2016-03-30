@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -99,21 +100,21 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.interval) {
             rxPresenter.findIntervalApp();
         } else if (id == R.id.range) {
-
+            rxPresenter.findRangAppInfo();
         } else if (id == R.id.filter) {
-
+            rxPresenter.findFilterApp();
         }else if (id == R.id.take) {
-
+            rxPresenter.findTakeAppInfo();
         }else if (id == R.id.takeLast) {
-
+            rxPresenter.findTakeLastAppInfo();
         }else if (id == R.id.Distinct) {
-
+            rxPresenter.findDistinctAppInfo();
         }else if (id == R.id.DistinctUntilsChanged) {
-
+            rxPresenter.findDistinctUntilsChangedAppInfo();
         }else if (id == R.id.first) {
-
+            rxPresenter.findFirstAppInfo();
         }else if (id == R.id.firstOrDefault) {
-
+            rxPresenter.findFirstOrDefaultAppInfo();
         }else if (id == R.id.skip) {
 
         }else if (id == R.id.skipLast) {
@@ -172,8 +173,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
-
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onBackPressed() {

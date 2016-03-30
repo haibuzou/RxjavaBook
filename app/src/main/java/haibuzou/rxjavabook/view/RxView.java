@@ -10,5 +10,6 @@ public interface RxView {
     void setListItem(List<AppInfo> appList);
     void showLoading();
     void hideLoading();
+    void showMessage(String message);
 
 }

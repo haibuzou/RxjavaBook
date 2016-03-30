@@ -8,7 +8,7 @@
                 android:title="创建Observable" />
             <item
                 android:id="@+id/senior_observable"
-                android:title="更高好的写法" />
+                android:title="更好的写法" />
             <item
                 android:id="@+id/timer"
                 android:title="timer 定时发送" />
@@ -68,16 +68,16 @@
         <menu>
             <item
                 android:id="@+id/map"
-                android:title="map" />
+                android:title="map 转换返回值类型" />
             <item
                 android:id="@+id/flatmap"
-                android:title="flatmap" />
+                android:title="flatmap 转换返回值为Observable" />
             <item
                 android:id="@+id/concatMap"
-                android:title="concatMap" />
+                android:title="concatMap 解决交叉问题" />
             <item
                 android:id="@+id/flatMapIterable"
-                android:title="flatMapIterable" />
+                android:title="flatMapIterable 转换返回值Iterable" />
             <item
                 android:id="@+id/switchMap"
                 android:title="switchMap" />
@@ -86,7 +86,7 @@
                 android:title="scan" />
             <item
                 android:id="@+id/groupBy"
-                android:title="groupBy" />
+                android:title="groupBy 分组" />
             <item
                 android:id="@+id/Buffer"
                 android:title="Buffer" />
@@ -95,7 +95,7 @@
                 android:title="window" />
             <item
                 android:id="@+id/cast"
-                android:title="cast" />
+                android:title="cast 转换返回类型" />
         </menu>
     </item>
     <item android:title="合并Observable">
