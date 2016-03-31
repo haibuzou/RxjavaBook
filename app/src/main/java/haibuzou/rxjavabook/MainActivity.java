@@ -116,55 +116,55 @@ public class MainActivity extends AppCompatActivity
         }else if (id == R.id.firstOrDefault) {
             rxPresenter.findFirstOrDefaultAppInfo();
         }else if (id == R.id.skip) {
-
+            rxPresenter.findSkipAppInfo();
         }else if (id == R.id.skipLast) {
-
+            rxPresenter.findSkipLastAppInfo();
         }else if (id == R.id.elementAt) {
-
+            rxPresenter.findElementAtAppInfo();
         }else if (id == R.id.Sample) {
-
+            rxPresenter.findSampleAppInfo();
         }else if (id == R.id.TimeOut) {
-
+            rxPresenter.findTimeOutAppInfo();
         }else if (id == R.id.debounce) {
-
+            rxPresenter.findDebounceAppInfo();
         }else if (id == R.id.map) {
-
+            rxPresenter.findMapAppInfo();
         }else if (id == R.id.flatmap) {
-
+            rxPresenter.findFlatMapAppInfo();
         }else if (id == R.id.concatMap) {
-
+            rxPresenter.findConcatMapAppInfo();
         }else if (id == R.id.flatMapIterable) {
-
+            rxPresenter.findFlatMapIterableAppInfo();
         }else if (id == R.id.switchMap) {
-
+            rxPresenter.findSwitchMapAppInfo();
         }else if (id == R.id.scan) {
-
+            rxPresenter.findScanAppInfo();
         }else if (id == R.id.groupBy) {
-
+            rxPresenter.findGroupByAppInfo();
         }else if (id == R.id.Buffer) {
-
+            rxPresenter.findBufferAppInfo();
         }else if (id == R.id.window) {
-
+            rxPresenter.findWindowAppInfo();
         }else if (id == R.id.cast) {
-
+            rxPresenter.findCastAppInfo();
         }else if (id == R.id.merge) {
-
+            rxPresenter.findMergeAppInfo();
         }else if (id == R.id.zip) {
-
+            rxPresenter.findZipAppInfo();
         }else if (id == R.id.join) {
-
+            rxPresenter.findJoinAppInfo();
         }else if (id == R.id.combineLatest) {
-
+            rxPresenter.findComebineLastAppInfo();
         }else if (id == R.id.and_then_when) {
-
+            rxPresenter.findAndThenWhenAppInfo();
         }else if (id == R.id.switchOnNext) {
-
+            rxPresenter.findSwitchOnNextAppInfo();
         }else if (id == R.id.startWith) {
-
+            rxPresenter.findStartWithAppInfo();
         }else if (id == R.id.SubscribeOnandObserveOn) {
-
+            rxPresenter.dispatcher();
         }else if (id == R.id.long_task) {
-
+            rxPresenter.longTask();
         }
 
 

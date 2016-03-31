@@ -51,9 +51,23 @@ public class RxPresenter {
     }
 
     /**
+     * 检索设备内所有的app 信息 直接返回 AppInfo
+     */
+    public List<AppInfo> getAllAppInfo() {
+        List<AppInfo> data = new ArrayList<>();
+        List<ResolveInfo> app = context.getPackageManager().queryIntentActivities(mainIntent, 0);
+        for (ResolveInfo info : app) {
+            AppInfo appInfo = new AppInfo(info.loadLabel(packageManager).toString(),
+                    info.loadIcon(packageManager));
+            data.add(appInfo);
+        }
+        return data;
+    }
+
+    /**
      * Observable 转ArrayList
      */
-    public List<AppInfo> ObservableToList(Observable<AppInfo> appInfoObservable){
+    public List<AppInfo> ObservableToList(Observable<AppInfo> appInfoObservable) {
         return appInfoObservable.toSortedList().toBlocking().single();
     }
 
@@ -76,7 +90,7 @@ public class RxPresenter {
 
     }
 
-    public void findRangAppInfo(){
+    public void findRangAppInfo() {
         getRangAppInfo();
     }
 
@@ -84,31 +98,129 @@ public class RxPresenter {
         rxView.setListItem(getFilterAppInfo().toSortedList().toBlocking().single());
     }
 
-    public void findTakeAppInfo(){
+    public void findTakeAppInfo() {
         rxView.setListItem(getTakeAppInfo().toSortedList().toBlocking().single());
     }
 
-    public void findTakeLastAppInfo(){
+    public void findTakeLastAppInfo() {
         rxView.setListItem(getTakeLastAppInfo().toSortedList().toBlocking().single());
     }
 
-    public void findDistinctAppInfo(){
+    public void findDistinctAppInfo() {
         getDistinctAppInfo();
     }
 
-    public void findDistinctUntilsChangedAppInfo(){
+    public void findDistinctUntilsChangedAppInfo() {
         rxView.setListItem(ObservableToList(getDistinctUntilsChangedAppInfo()));
     }
 
-    public void findFirstAppInfo(){
+    public void findFirstAppInfo() {
         rxView.setListItem(ObservableToList(getFirstAppInfo()));
     }
 
-    public void findFirstOrDefaultAppInfo(){
+    public void findFirstOrDefaultAppInfo() {
         rxView.setListItem(ObservableToList(getFirstorDefaultAppInfo()));
     }
 
+    public void findSkipAppInfo(){
+        rxView.setListItem(ObservableToList(getSkipAppInfo()));
+    }
 
+    public void findSkipLastAppInfo(){
+        rxView.setListItem(ObservableToList(getSkipLastAppInfo()));
+    }
+
+    public void findElementAtAppInfo(){
+        rxView.setListItem(ObservableToList(getElementAtAppInfo()));
+    }
+
+    public void findSampleAppInfo(){
+       Sample();
+    }
+
+    public void findTimeOutAppInfo(){
+        rxView.setListItem(ObservableToList(getTimeOutAppInfo()));
+    }
+
+    public void findDebounceAppInfo(){
+        rxView.setListItem(ObservableToList(getDebounceAppInfo()));
+    }
+
+    public void findMapAppInfo(){
+//        rxView.setListItem(ObservableToList());
+    }
+
+    public void findFlatMapAppInfo(){
+
+    }
+
+    public void findConcatMapAppInfo(){
+
+    }
+
+    public void findFlatMapIterableAppInfo(){
+
+    }
+
+    public void findSwitchMapAppInfo(){
+
+    }
+
+    public void findScanAppInfo(){
+
+    }
+
+    public void findGroupByAppInfo(){
+
+    }
+
+    public void findBufferAppInfo(){
+
+    }
+
+    public void findWindowAppInfo(){
+
+    }
+
+    public void findCastAppInfo(){
+
+    }
+
+    public void findMergeAppInfo(){
+        rxView.setListItem(ObservableToList(getMergeAppInfo()));
+    }
+
+    public void findZipAppInfo(){
+        rxView.setListItem(ObservableToList(getZipAppInfo()));
+    }
+
+    public void findJoinAppInfo(){
+        rxView.setListItem(ObservableToList(getJoinAppInfo()));
+    }
+
+    public void findComebineLastAppInfo(){
+        rxView.setListItem(ObservableToList(getCombinLatestAppInfo()));
+    }
+
+    public void findAndThenWhenAppInfo(){
+        rxView.setListItem(ObservableToList(getAndThenWhenAppInfo()));
+    }
+
+    public void findSwitchOnNextAppInfo(){
+        rxView.setListItem(ObservableToList(getSwitchAppInfo()));
+    }
+
+    public void findStartWithAppInfo(){
+        rxView.setListItem(ObservableToList(getStartWithAppInfo()));
+    }
+
+    public void dispatcher(){
+        rxView.setListItem(ObservableToList(getAppInfoWithObserveOnAndSubscribeOn()));
+    }
+
+    public void longTask(){
+        rxView.setListItem(ObservableToList(getAppInfoWithLongTask()));
+    }
 
     /**
      * --------------------------------------------------------------------------- 第一章分割线
@@ -197,24 +309,24 @@ public class RxPresenter {
      * 但是只发送一次
      */
     public void getTimerAppInfo() {
-         Observable.timer(3, TimeUnit.SECONDS)
-                   .observeOn(AndroidSchedulers.mainThread())
-                   .subscribe(new Observer<Long>() {
-                       @Override
-                       public void onCompleted() {
-                            rxView.showMessage("timer 完成");
-                       }
+        Observable.timer(3, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.showMessage("timer 完成");
+                    }
 
-                       @Override
-                       public void onError(Throwable e) {
-                           rxView.showMessage("timer 出错");
-                       }
+                    @Override
+                    public void onError(Throwable e) {
+                        rxView.showMessage("timer 出错");
+                    }
 
-                       @Override
-                       public void onNext(Long aLong) {
-                            rxView.showMessage("timer onNext "+aLong);
-                       }
-                   });
+                    @Override
+                    public void onNext(Long aLong) {
+                        rxView.showMessage("timer onNext " + aLong);
+                    }
+                });
     }
 
 
@@ -224,23 +336,23 @@ public class RxPresenter {
      */
     public void getIntervalAppInfo() {
         Observable.interval(3, TimeUnit.SECONDS)
-                  .observeOn(AndroidSchedulers.mainThread())
-                  .subscribe(new Observer<Long>() {
-                      @Override
-                      public void onCompleted() {
-                          rxView.showMessage("轮询结束");
-                      }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.showMessage("轮询结束");
+                    }
 
-                      @Override
-                      public void onError(Throwable e) {
-                          rxView.showMessage("轮询出错");
-                      }
+                    @Override
+                    public void onError(Throwable e) {
+                        rxView.showMessage("轮询出错");
+                    }
 
-                      @Override
-                      public void onNext(Long aLong) {
-                          rxView.showMessage("" + aLong);
-                          rxView.setListItem(getAppInfo().toSortedList().toBlocking().single());
-                      }
+                    @Override
+                    public void onNext(Long aLong) {
+                        rxView.showMessage("" + aLong);
+                        rxView.setListItem(getAppInfo().toSortedList().toBlocking().single());
+                    }
                 });
 
     }
@@ -252,23 +364,23 @@ public class RxPresenter {
      * rang(x,N)
      */
     private void getRangAppInfo() {
-         Observable.range(0, 10)
-                   .subscribe(new Observer<Integer>() {
-                       @Override
-                       public void onCompleted() {
-                           rxView.showMessage("rang(0,10) 发送完成");
-                       }
+        Observable.range(0, 10)
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.showMessage("rang(0,10) 发送完成");
+                    }
 
-                       @Override
-                       public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-                       }
+                    }
 
-                       @Override
-                       public void onNext(Integer integer) {
-                            rxView.showMessage("rang"+integer);
-                       }
-                   });
+                    @Override
+                    public void onNext(Integer integer) {
+                        rxView.showMessage("rang" + integer);
+                    }
+                });
     }
 
 
@@ -367,52 +479,32 @@ public class RxPresenter {
      * 与数据库查询一致 过滤重复数据
      * 这里的例子 获取前3个数据 然后故意repeate了3次
      * 制造重复数据 最后用distinct过滤
+     *
+     * 注意Distinct 在map 转换之后会发生无法过滤重复数据的情况 特别注意
      */
     public void getDistinctAppInfo() {
         final List<AppInfo> data = new ArrayList<>();
-//        AppInfo appInfo1 = new AppInfo("hehe1", null);
-//        AppInfo appInfo2 = new AppInfo("hehe2", null);
-//        AppInfo appInfo3 = new AppInfo("hehe3", null);
-//        Observable.just(appInfo1, appInfo2, appInfo3)
-//                .repeat(3)
-//                .distinct()
-//                .subscribe(new Observer<AppInfo>() {
-//                    @Override
-//                    public void onCompleted() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(AppInfo s) {
-//                        data.add(s);
-//                        rxView.setListItem(data);
-//                    }
-//                });
+        Observable.from(getAllAppInfo()).take(3)
+                .repeat(3)
+                .distinct()
+                .subscribe(new Observer<AppInfo>() {
+                    @Override
+                    public void onCompleted() {
 
-        getAppInfo().take(3)
-                    .distinct()
-                    .subscribe(new Observer<AppInfo>() {
-                        @Override
-                        public void onCompleted() {
+                    }
 
-                        }
+                    @Override
+                    public void onError(Throwable e) {
 
-                        @Override
-                        public void onError(Throwable e) {
+                    }
 
-                        }
-
-                        @Override
-                        public void onNext(AppInfo appInfo) {
-                            data.add(appInfo);
-                            rxView.setListItem(data);
-                        }
-                    });
+                    @Override
+                    public void onNext(AppInfo appInfo) {
+                        rxView.showMessage(appInfo.mName);
+                        data.add(appInfo);
+                        rxView.setListItem(data);
+                    }
+                });
     }
 
 
@@ -428,7 +520,7 @@ public class RxPresenter {
      * 忽略掉重复的值并且在温度确实改变时才想得到通知
      */
     public Observable<AppInfo> getDistinctUntilsChangedAppInfo() {
-        return getAppInfo().take(0).take(1).take(0).repeat(2).take(1).distinctUntilChanged();
+        return getAppInfo().take(3).repeat(3).distinctUntilChanged();
     }
 
 
