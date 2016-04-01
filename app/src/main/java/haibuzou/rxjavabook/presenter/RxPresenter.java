@@ -122,103 +122,103 @@ public class RxPresenter {
         rxView.setListItem(ObservableToList(getFirstorDefaultAppInfo()));
     }
 
-    public void findSkipAppInfo(){
+    public void findSkipAppInfo() {
         rxView.setListItem(ObservableToList(getSkipAppInfo()));
     }
 
-    public void findSkipLastAppInfo(){
+    public void findSkipLastAppInfo() {
         rxView.setListItem(ObservableToList(getSkipLastAppInfo()));
     }
 
-    public void findElementAtAppInfo(){
+    public void findElementAtAppInfo() {
         rxView.setListItem(ObservableToList(getElementAtAppInfo()));
     }
 
-    public void findSampleAppInfo(){
-       Sample();
+    public void findSampleAppInfo() {
+        Sample();
     }
 
-    public void findTimeOutAppInfo(){
+    public void findTimeOutAppInfo() {
         rxView.setListItem(ObservableToList(getTimeOutAppInfo()));
     }
 
-    public void findDebounceAppInfo(){
+    public void findDebounceAppInfo() {
         rxView.setListItem(ObservableToList(getDebounceAppInfo()));
     }
 
-    public void findMapAppInfo(){
-//        rxView.setListItem(ObservableToList());
+    public void findMapAppInfo() {
+        getAppNameWithMap();
     }
 
-    public void findFlatMapAppInfo(){
-
+    public void findFlatMapAppInfo() {
+        getAppIconWithFlatMap();
     }
 
-    public void findConcatMapAppInfo(){
-
+    public void findConcatMapAppInfo() {
+        getAppIconWithConcatMap();
     }
 
-    public void findFlatMapIterableAppInfo(){
-
+    public void findFlatMapIterableAppInfo() {
+        getAppIconWithFlatMapIterable();
     }
 
-    public void findSwitchMapAppInfo(){
-
+    public void findSwitchMapAppInfo() {
+        getAppIconWithSwitchMap();
     }
 
-    public void findScanAppInfo(){
-
+    public void findScanAppInfo() {
+        rxView.setListItem(ObservableToList(getScanAppInfo()));
     }
 
-    public void findGroupByAppInfo(){
-
+    public void findGroupByAppInfo() {
+        rxView.setListItem(ObservableToList(getGroupByAppInfo()));
     }
 
-    public void findBufferAppInfo(){
-
-    }
-
-    public void findWindowAppInfo(){
+    public void findBufferAppInfo() {
 
     }
 
-    public void findCastAppInfo(){
+    public void findWindowAppInfo() {
 
     }
 
-    public void findMergeAppInfo(){
+    public void findCastAppInfo() {
+
+    }
+
+    public void findMergeAppInfo() {
         rxView.setListItem(ObservableToList(getMergeAppInfo()));
     }
 
-    public void findZipAppInfo(){
+    public void findZipAppInfo() {
         rxView.setListItem(ObservableToList(getZipAppInfo()));
     }
 
-    public void findJoinAppInfo(){
+    public void findJoinAppInfo() {
         rxView.setListItem(ObservableToList(getJoinAppInfo()));
     }
 
-    public void findComebineLastAppInfo(){
+    public void findComebineLastAppInfo() {
         rxView.setListItem(ObservableToList(getCombinLatestAppInfo()));
     }
 
-    public void findAndThenWhenAppInfo(){
+    public void findAndThenWhenAppInfo() {
         rxView.setListItem(ObservableToList(getAndThenWhenAppInfo()));
     }
 
-    public void findSwitchOnNextAppInfo(){
+    public void findSwitchOnNextAppInfo() {
         rxView.setListItem(ObservableToList(getSwitchAppInfo()));
     }
 
-    public void findStartWithAppInfo(){
+    public void findStartWithAppInfo() {
         rxView.setListItem(ObservableToList(getStartWithAppInfo()));
     }
 
-    public void dispatcher(){
+    public void dispatcher() {
         rxView.setListItem(ObservableToList(getAppInfoWithObserveOnAndSubscribeOn()));
     }
 
-    public void longTask(){
+    public void longTask() {
         rxView.setListItem(ObservableToList(getAppInfoWithLongTask()));
     }
 
@@ -479,7 +479,7 @@ public class RxPresenter {
      * 与数据库查询一致 过滤重复数据
      * 这里的例子 获取前3个数据 然后故意repeate了3次
      * 制造重复数据 最后用distinct过滤
-     *
+     * <p/>
      * 注意Distinct 在map 转换之后会发生无法过滤重复数据的情况 特别注意
      */
     public void getDistinctAppInfo() {
@@ -649,12 +649,30 @@ public class RxPresenter {
      * 转换发送的数据类型
      * 下面的例子就是为了只获取文件名 将appinfo 转换成了 String
      */
-    public Observable<String> getAppNameWithMap() {
-        return getAppInfo()
+    public void getAppNameWithMap() {
+        final List<AppInfo> appInfoList = new ArrayList<>();
+        getAppInfo()
                 .map(new Func1<AppInfo, String>() {
                     @Override
                     public String call(AppInfo appInfo) {
                         return appInfo.mName;
+                    }
+                })
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(appInfoList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        AppInfo app = new AppInfo(s, null);
+                        appInfoList.add(app);
                     }
                 });
     }
@@ -673,12 +691,30 @@ public class RxPresenter {
      * A....C..B..D..C..C
      * 最重要的一点 它允许交叉。正如上图所示，这意味着flatMap()不能够保证在最终生成的Observable中源Observables确切的发射顺序。
      */
-    public Observable<Drawable> getAppIconWithFlatMap() {
-        return getAppInfo()
+    public void getAppIconWithFlatMap() {
+        final List<AppInfo> appInfoList = new ArrayList<>();
+        getAppInfo()
                 .flatMap(new Func1<AppInfo, Observable<Drawable>>() {
                     @Override
                     public Observable<Drawable> call(AppInfo appInfo) {
                         return Observable.just(appInfo.mIcon);
+                    }
+                })
+                .subscribe(new Observer<Drawable>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(appInfoList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Drawable drawable) {
+                        AppInfo appInfo = new AppInfo("flatmap app", drawable);
+                        appInfoList.add(appInfo);
                     }
                 });
     }
@@ -694,12 +730,29 @@ public class RxPresenter {
      * <p/>
      * A....C..B....C..D....C
      */
-    public Observable<Drawable> getAppIconWithConcatMap() {
-        return getAppInfo()
+    public void getAppIconWithConcatMap() {
+        final List<AppInfo> appInfoList = new ArrayList<>();
+        getAppInfo()
                 .concatMap(new Func1<AppInfo, Observable<? extends Drawable>>() {
                     @Override
                     public Observable<? extends Drawable> call(AppInfo appInfo) {
                         return Observable.just(appInfo.mIcon);
+                    }
+                })
+                .subscribe(new Observer<Drawable>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(appInfoList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Drawable drawable) {
+                        appInfoList.add(new AppInfo("concatMap app", drawable));
                     }
                 });
     }
@@ -710,14 +763,31 @@ public class RxPresenter {
      * 与flatMap功能一样 但是flatMapIterable是将数据转换成集合 而不是Observable
      * 同样flatMapIterable也会产生交叉
      */
-    public Observable<Drawable> getAppIconWithFlatMapIterable() {
-        return getAppInfo()
+    public void getAppIconWithFlatMapIterable() {
+        final List<AppInfo> appInfoList = new ArrayList<>();
+        getAppInfo()
                 .flatMapIterable(new Func1<AppInfo, List<Drawable>>() {
                     @Override
                     public List<Drawable> call(AppInfo appInfo) {
                         List<Drawable> list = new ArrayList<>();
                         list.add(appInfo.mIcon);
                         return list;
+                    }
+                })
+                .subscribe(new Observer<Drawable>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(appInfoList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Drawable drawable) {
+                        appInfoList.add(new AppInfo("flatMapIterable",drawable));
                     }
                 });
     }
@@ -733,12 +803,29 @@ public class RxPresenter {
      * <p/>
      * A....C..B.D....C
      */
-    public Observable<Drawable> getAppIconWithSwitchMap() {
-        return getAppInfo()
+    public void getAppIconWithSwitchMap() {
+        final List<AppInfo> appInfoList = new ArrayList<>();
+        getAppInfo()
                 .switchMap(new Func1<AppInfo, Observable<Drawable>>() {
                     @Override
                     public Observable<Drawable> call(AppInfo appInfo) {
                         return Observable.just(appInfo.mIcon);
+                    }
+                })
+                .subscribe(new Observer<Drawable>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(appInfoList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Drawable drawable) {
+                        appInfoList.add(new AppInfo("switchMap",drawable));
                     }
                 });
     }
@@ -850,7 +937,9 @@ public class RxPresenter {
      * A,B.C....D,E.F
      */
     public Observable<List<AppInfo>> getBufferTimeSpanInfo() {
-        return getAppInfo().buffer(4, TimeUnit.SECONDS, 2);
+        return getAppInfo()
+                .buffer(4, TimeUnit.SECONDS, 2)
+                ;
     }
 
 
@@ -1127,7 +1216,8 @@ public class RxPresenter {
                                 resolveInfo.loadIcon(packageManager));
                         return appinfo;
                     }
-                }).subscribeOn(Schedulers.computation())
+                })
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
