@@ -19,6 +19,7 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.joins.Pattern2;
@@ -175,15 +176,15 @@ public class RxPresenter {
     }
 
     public void findBufferAppInfo() {
-
+        getBufferAppInfo();
     }
 
     public void findWindowAppInfo() {
-
+        getWindowAppInfo();
     }
 
     public void findCastAppInfo() {
-
+        getAppNameWithCast();
     }
 
     public void findMergeAppInfo() {
@@ -203,7 +204,7 @@ public class RxPresenter {
     }
 
     public void findAndThenWhenAppInfo() {
-        rxView.setListItem(ObservableToList(getAndThenWhenAppInfo()));
+        getAndThenWhenAppInfo();
     }
 
     public void findSwitchOnNextAppInfo() {
@@ -215,11 +216,11 @@ public class RxPresenter {
     }
 
     public void dispatcher() {
-        rxView.setListItem(ObservableToList(getAppInfoWithObserveOnAndSubscribeOn()));
+        getAppInfoWithObserveOnAndSubscribeOn();
     }
 
     public void longTask() {
-        rxView.setListItem(ObservableToList(getAppInfoWithLongTask()));
+        getAppInfoWithLongTask();
     }
 
     /**
@@ -787,7 +788,7 @@ public class RxPresenter {
 
                     @Override
                     public void onNext(Drawable drawable) {
-                        appInfoList.add(new AppInfo("flatMapIterable",drawable));
+                        appInfoList.add(new AppInfo("flatMapIterable", drawable));
                     }
                 });
     }
@@ -825,7 +826,7 @@ public class RxPresenter {
 
                     @Override
                     public void onNext(Drawable drawable) {
-                        appInfoList.add(new AppInfo("switchMap",drawable));
+                        appInfoList.add(new AppInfo("switchMap", drawable));
                     }
                 });
     }
@@ -914,16 +915,34 @@ public class RxPresenter {
      * <p/>
      * 注意使用buffer后返回的数据会被转成集合
      */
-    public Observable<List<AppInfo>> getBufferAppInfo() {
-        return getAppInfo().buffer(2);
+    public void getBufferAppInfo() {
+        getAppInfo()
+                .buffer(2)
+                .subscribe(new Observer<List<AppInfo>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AppInfo> appInfos) {
+                        rxView.setListItem(appInfos);
+                    }
+                });
     }
 
     /**
      * buffer(count = 2,skip = 3)
      * 可以选择跳过不需要的部分
      */
-    public Observable<List<AppInfo>> getBufferSkipInfo() {
-        return getAppInfo().buffer(2, 3);
+    public void getBufferSkipInfo() {
+        getAppInfo()
+                .buffer(2, 3);
     }
 
     /**
@@ -938,8 +957,7 @@ public class RxPresenter {
      */
     public Observable<List<AppInfo>> getBufferTimeSpanInfo() {
         return getAppInfo()
-                .buffer(4, TimeUnit.SECONDS, 2)
-                ;
+                .buffer(4, TimeUnit.SECONDS, 2);
     }
 
 
@@ -949,9 +967,35 @@ public class RxPresenter {
      * 同样window 也有skip
      * window(Count = 3)
      * window(count = 3,skip = 3)
+     * tip: 这里的写法还不成熟
      */
-    public Observable<Observable<AppInfo>> getWindowAooInfo() {
-        return getAppInfo().window(3);
+    public void getWindowAppInfo() {
+        final List<AppInfo> dataList = new ArrayList<>();
+        getAppInfo()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .window(3)
+                .subscribe(new Observer<Observable<AppInfo>>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(dataList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Observable<AppInfo> appInfoObservable) {
+                        appInfoObservable.subscribe(new Action1<AppInfo>() {
+                            @Override
+                            public void call(AppInfo appInfo) {
+                                dataList.add(appInfo);
+                            }
+                        });
+                    }
+                });
     }
 
 
@@ -959,8 +1003,27 @@ public class RxPresenter {
      * cast 操作符
      * cast是map()操作符的特殊版本。它将源Observable中的每一项数据都转换为新的类型，把它变成了不同的Class
      */
-    public Observable<String> getAppNameWithCast() {
-        return getAppInfo().cast(String.class);
+    public void getAppNameWithCast() {
+        final List<AppInfo> dataList = new ArrayList<>();
+        getAppInfo()
+                .cast(String.class)
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(dataList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        AppInfo appInfo = new AppInfo(s, null);
+                        dataList.add(appInfo);
+                    }
+                });
     }
 
 
@@ -1103,7 +1166,8 @@ public class RxPresenter {
      * 不过他们在RxJava的joins包下
      * compile 'io.reactivex:rxjava-joins:0.22.0'
      */
-    public Observable<AppInfo> getAndThenWhenAppInfo() {
+    public void getAndThenWhenAppInfo() {
+        final List<AppInfo> dataList = new ArrayList<>();
         Observable<AppInfo> observableApp = getAppInfo();
         Observable<Long> tictoc = Observable.interval(1, TimeUnit.SECONDS);
         Pattern2<AppInfo, Long> pattern = JoinObservable.from(observableApp).and(tictoc);
@@ -1115,7 +1179,25 @@ public class RxPresenter {
             }
         });
 
-        return JoinObservable.when(plan).toObservable();
+        JoinObservable
+                .when(plan)
+                .toObservable()
+                .subscribe(new Observer<AppInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(dataList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(AppInfo appInfo) {
+                        dataList.add(appInfo);
+                    }
+                });
     }
 
 
@@ -1193,9 +1275,29 @@ public class RxPresenter {
      * SubscribeOn and ObserveOn
      * SubscribeOn 用于每个Observable对象 也就是事件源所执行的线程
      * ObserveOn 指定的是观察者的线程，也就是Observable出发数据后在哪个线程执行
+     * tips: 这里如果不执行subscribe订阅 就会 卡死
      */
-    public Observable<AppInfo> getAppInfoWithObserveOnAndSubscribeOn() {
-        return getAppInfo().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public void getAppInfoWithObserveOnAndSubscribeOn() {
+        final List<AppInfo> dataList = new ArrayList<>();
+        getAppInfo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<AppInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(dataList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(AppInfo appInfo) {
+                        dataList.add(appInfo);
+                    }
+                });
     }
 
 
@@ -1203,9 +1305,11 @@ public class RxPresenter {
      * 模拟了一个耗时操作
      * subscribeOn(Schedulers.computation()) 设置计算的线程
      * 如果不设置导致App卡死
+     * tips: 这里如果不执行subscribe订阅就直接发送数据subscribeOn，observeOn不会生效
      */
-    public Observable<AppInfo> getAppInfoWithLongTask() {
-        return Observable.from(getAllApp())
+    public void getAppInfoWithLongTask() {
+        final List<AppInfo> dataList = new ArrayList<>();
+        Observable.from(getAllApp())
                 .map(new Func1<ResolveInfo, AppInfo>() {
                     @Override
                     public AppInfo call(ResolveInfo resolveInfo) {
@@ -1218,7 +1322,23 @@ public class RxPresenter {
                     }
                 })
                 .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<AppInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(dataList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(AppInfo appInfo) {
+                        dataList.add(appInfo);
+                    }
+                });
     }
 
 }
