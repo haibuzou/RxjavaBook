@@ -192,15 +192,15 @@ public class RxPresenter {
     }
 
     public void findZipAppInfo() {
-        rxView.setListItem(ObservableToList(getZipAppInfo()));
+        getZipAppInfo();
     }
 
     public void findJoinAppInfo() {
-        rxView.setListItem(ObservableToList(getJoinAppInfo()));
+        getJoinAppInfo();
     }
 
     public void findComebineLastAppInfo() {
-        rxView.setListItem(ObservableToList(getCombinLatestAppInfo()));
+        getCombinLatestAppInfo();
     }
 
     public void findAndThenWhenAppInfo() {
@@ -208,11 +208,11 @@ public class RxPresenter {
     }
 
     public void findSwitchOnNextAppInfo() {
-        rxView.setListItem(ObservableToList(getSwitchAppInfo()));
+        getSwitchAppInfo();
     }
 
     public void findStartWithAppInfo() {
-        rxView.setListItem(ObservableToList(getStartWithAppInfo()));
+        getStartWithAppInfo();
     }
 
     public void dispatcher() {
@@ -1074,17 +1074,35 @@ public class RxPresenter {
      * 下面的例子 创建了每隔1秒发送一个数字的Observable tictoc  和 查询出来的 appObservable 进行zip 操作
      * 具体操作规则 是将app的Name后面 添加 tictoc 发射的数字，返回的值仍然是 AppInfo
      */
-    public Observable<AppInfo> getZipAppInfo() {
+    public void getZipAppInfo() {
+        final List<AppInfo> dataList = new ArrayList<>();
         Observable<AppInfo> appObservable = getAppInfo();
         Observable<Long> tictoc = Observable.interval(1, TimeUnit.SECONDS);
 
-        return Observable.zip(tictoc, appObservable, new Func2<Long, AppInfo, AppInfo>() {
-            @Override
-            public AppInfo call(Long aLong, AppInfo appInfo) {
-                AppInfo newApp = new AppInfo(appInfo.mName + aLong, appInfo.mIcon);
-                return newApp;
-            }
-        });
+        Observable
+                .zip(tictoc, appObservable, new Func2<Long, AppInfo, AppInfo>() {
+                    @Override
+                    public AppInfo call(Long aLong, AppInfo appInfo) {
+                        AppInfo newApp = new AppInfo(appInfo.mName + aLong, appInfo.mIcon);
+                        return newApp;
+                    }
+                })
+                .subscribe(new Observer<AppInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(dataList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(AppInfo appInfo) {
+                        dataList.add(appInfo);
+                    }
+                });
     }
 
 
@@ -1097,7 +1115,8 @@ public class RxPresenter {
      * Func1参数：在指定的由时间窗口定义时间间隔内，第二个Observable发射的数据和从源Observable发射的数据相互配合返回的Observable。
      * Func2参数：定义已发射的数据如何与新发射的数据项相结合。
      */
-    public Observable<AppInfo> getJoinAppInfo() {
+    public void getJoinAppInfo() {
+        final List<AppInfo> dataList = new ArrayList<>();
         final List<AppInfo> apps = getList();
         Observable<Long> tictoc = Observable.interval(1, TimeUnit.SECONDS);
         final Observable<AppInfo> appsSequence = Observable.interval(1, TimeUnit.SECONDS).map(new Func1<Long, AppInfo>() {
@@ -1107,23 +1126,40 @@ public class RxPresenter {
             }
         });
 
-        return appsSequence.join(tictoc, new Func1<AppInfo, Observable<Long>>() {
-            @Override
-            public Observable<Long> call(AppInfo appInfo) {
-                return Observable.timer(2, TimeUnit.SECONDS);
-            }
-        }, new Func1<Long, Observable<Long>>() {
-            @Override
-            public Observable<Long> call(Long aLong) {
-                return Observable.timer(0, TimeUnit.SECONDS);
-            }
-        }, new Func2<AppInfo, Long, AppInfo>() {
-            @Override
-            public AppInfo call(AppInfo appInfo, Long aLong) {
-                appInfo.mName = aLong + appInfo.mName;
-                return appInfo;
-            }
-        });
+        appsSequence
+                .join(tictoc, new Func1<AppInfo, Observable<Long>>() {
+                    @Override
+                    public Observable<Long> call(AppInfo appInfo) {
+                        return Observable.timer(2, TimeUnit.SECONDS);
+                    }
+                }, new Func1<Long, Observable<Long>>() {
+                    @Override
+                    public Observable<Long> call(Long aLong) {
+                        return Observable.timer(0, TimeUnit.SECONDS);
+                    }
+                }, new Func2<AppInfo, Long, AppInfo>() {
+                    @Override
+                    public AppInfo call(AppInfo appInfo, Long aLong) {
+                        appInfo.mName = aLong + appInfo.mName;
+                        return appInfo;
+                    }
+                })
+                .subscribe(new Observer<AppInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(dataList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(AppInfo appInfo) {
+                        dataList.add(appInfo);
+                    }
+                });
     }
 
     /**
@@ -1139,7 +1175,9 @@ public class RxPresenter {
      * <p/>
      * ...1A.....2A2B....2C...2D...3D...4D.....5D
      */
-    public Observable<AppInfo> getCombinLatestAppInfo() {
+    public void getCombinLatestAppInfo() {
+        final List<AppInfo> dataList = new ArrayList<>();
+
         final List<AppInfo> apps = getList();
         Observable<AppInfo> appsSequence = Observable.interval(1000, TimeUnit.MILLISECONDS).map(new Func1<Long, AppInfo>() {
             @Override
@@ -1149,13 +1187,30 @@ public class RxPresenter {
         });
 
         Observable<Long> tictoc = Observable.interval(1500, TimeUnit.MILLISECONDS);
-        return Observable.combineLatest(appsSequence, tictoc, new Func2<AppInfo, Long, AppInfo>() {
-            @Override
-            public AppInfo call(AppInfo appInfo, Long aLong) {
-                appInfo.mName = aLong + appInfo.mName;
-                return appInfo;
-            }
-        });
+        Observable
+                .combineLatest(appsSequence, tictoc, new Func2<AppInfo, Long, AppInfo>() {
+                    @Override
+                    public AppInfo call(AppInfo appInfo, Long aLong) {
+                        appInfo.mName = aLong + appInfo.mName;
+                        return appInfo;
+                    }
+                })
+                .subscribe(new Observer<AppInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(dataList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(AppInfo appInfo) {
+                        dataList.add(appInfo);
+                    }
+                });
 
     }
 
@@ -1208,7 +1263,8 @@ public class RxPresenter {
      * 开始发射最近的Observable发射的数据。注意：当原始Observable发射了一个新的Observable时（不是这个新的Observable发射了一条数据时），它将取消订阅之前的那个Observable。
      * 这意味着，在后来那个Observable产生之后到它开始发射数据之前的这段时间里，前一个Observable发射的数据将被丢弃
      */
-    public Observable<AppInfo> getSwitchAppInfo() {
+    public void getSwitchAppInfo() {
+        final List<AppInfo> dataList = new ArrayList<>();
         Observable<Observable<AppInfo>> switchObservable = Observable.from(getAllApp())
                 .map(new Func1<ResolveInfo, Observable<AppInfo>>() {
                     @Override
@@ -1216,7 +1272,24 @@ public class RxPresenter {
                         return null;
                     }
                 });
-        return Observable.switchOnNext(switchObservable);
+        Observable
+                .switchOnNext(switchObservable)
+                .subscribe(new Observer<AppInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(dataList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(AppInfo appInfo) {
+                        dataList.add(appInfo);
+                    }
+                });
     }
 
 
@@ -1225,9 +1298,27 @@ public class RxPresenter {
      * Observable开始发射他们的数据之前，startWith()通过传递一个参数来先发射一个数据序列
      * starWith()可以接收单个数据，也可以接受集合甚至是Observable
      */
-    public Observable<AppInfo> getStartWithAppInfo() {
+    public void getStartWithAppInfo() {
+        final List<AppInfo> dataList = new ArrayList<>();
         AppInfo appInfo = new AppInfo("我才是第一个", null);
-        return getAppInfo().startWith(appInfo);
+        getAppInfo()
+                .startWith(appInfo)
+                .subscribe(new Observer<AppInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        rxView.setListItem(dataList);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(AppInfo appInfo) {
+                        dataList.add(appInfo);
+                    }
+                });
     }
 
 
