@@ -288,9 +288,8 @@ public class RxPresenter {
                 .map(new Func1<ResolveInfo, AppInfo>() {
                     @Override
                     public AppInfo call(ResolveInfo resolveInfo) {
-                        AppInfo appinfo = new AppInfo(resolveInfo.loadLabel(packageManager).toString(),
+                        return new AppInfo(resolveInfo.loadLabel(packageManager).toString(),
                                 resolveInfo.loadIcon(packageManager));
-                        return appinfo;
                     }
                 });
     }
@@ -1046,9 +1045,8 @@ public class RxPresenter {
         Observable<AppInfo> reverseAppObservable = Observable.from(reverseApp).map(new Func1<ResolveInfo, AppInfo>() {
             @Override
             public AppInfo call(ResolveInfo resolveInfo) {
-                AppInfo appinfo = new AppInfo(resolveInfo.loadLabel(packageManager).toString(),
+                return new AppInfo(resolveInfo.loadLabel(packageManager).toString(),
                         resolveInfo.loadIcon(packageManager));
-                return appinfo;
             }
         });
 
@@ -1077,30 +1075,32 @@ public class RxPresenter {
     public void getZipAppInfo() {
         final List<AppInfo> dataList = new ArrayList<>();
         Observable<AppInfo> appObservable = getAppInfo();
-        Observable<Long> tictoc = Observable.interval(1, TimeUnit.SECONDS);
+        Observable<Long> tictoc = Observable.interval(100, TimeUnit.MILLISECONDS);
 
         Observable
                 .zip(tictoc, appObservable, new Func2<Long, AppInfo, AppInfo>() {
                     @Override
                     public AppInfo call(Long aLong, AppInfo appInfo) {
-                        AppInfo newApp = new AppInfo(appInfo.mName + aLong, appInfo.mIcon);
-                        return newApp;
+                        return new AppInfo(appInfo.mName + aLong, appInfo.mIcon);
                     }
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AppInfo>() {
                     @Override
                     public void onCompleted() {
+                        rxView.showMessage("zip 完成");
                         rxView.setListItem(dataList);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        rxView.showMessage("zip 错误");
                     }
 
                     @Override
                     public void onNext(AppInfo appInfo) {
                         dataList.add(appInfo);
+
                     }
                 });
     }
@@ -1118,7 +1118,7 @@ public class RxPresenter {
     public void getJoinAppInfo() {
         final List<AppInfo> dataList = new ArrayList<>();
         final List<AppInfo> apps = getList();
-        Observable<Long> tictoc = Observable.interval(1, TimeUnit.SECONDS);
+        Observable<Long> tictoc = Observable.interval(100, TimeUnit.MILLISECONDS);
         final Observable<AppInfo> appsSequence = Observable.interval(1, TimeUnit.SECONDS).map(new Func1<Long, AppInfo>() {
             @Override
             public AppInfo call(Long aLong) {
@@ -1147,12 +1147,13 @@ public class RxPresenter {
                 .subscribe(new Observer<AppInfo>() {
                     @Override
                     public void onCompleted() {
+                        rxView.showMessage("join 完成");
                         rxView.setListItem(dataList);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        rxView.showMessage("join 出错");
                     }
 
                     @Override
@@ -1182,7 +1183,7 @@ public class RxPresenter {
         Observable<AppInfo> appsSequence = Observable.interval(1000, TimeUnit.MILLISECONDS).map(new Func1<Long, AppInfo>() {
             @Override
             public AppInfo call(Long aLong) {
-                return apps.get(aLong.intValue());
+                return apps.get(aLong.intValue() >= apps.size() ? apps.size()-1 : aLong.intValue());
             }
         });
 
@@ -1195,6 +1196,7 @@ public class RxPresenter {
                         return appInfo;
                     }
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AppInfo>() {
                     @Override
                     public void onCompleted() {
@@ -1203,7 +1205,7 @@ public class RxPresenter {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        rxView.showMessage("combineLatest 出错");
                     }
 
                     @Override
@@ -1224,7 +1226,7 @@ public class RxPresenter {
     public void getAndThenWhenAppInfo() {
         final List<AppInfo> dataList = new ArrayList<>();
         Observable<AppInfo> observableApp = getAppInfo();
-        Observable<Long> tictoc = Observable.interval(1, TimeUnit.SECONDS);
+        Observable<Long> tictoc = Observable.interval(100, TimeUnit.MILLISECONDS);
         Pattern2<AppInfo, Long> pattern = JoinObservable.from(observableApp).and(tictoc);
         Plan0<AppInfo> plan = pattern.then(new Func2<AppInfo, Long, AppInfo>() {
             @Override
@@ -1237,6 +1239,7 @@ public class RxPresenter {
         JoinObservable
                 .when(plan)
                 .toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AppInfo>() {
                     @Override
                     public void onCompleted() {
@@ -1407,9 +1410,8 @@ public class RxPresenter {
                         for (double i = 0; i < 1000000000; i++) {
                             double y = i * i;
                         }
-                        AppInfo appinfo = new AppInfo(resolveInfo.loadLabel(packageManager).toString(),
+                        return new AppInfo(resolveInfo.loadLabel(packageManager).toString(),
                                 resolveInfo.loadIcon(packageManager));
-                        return appinfo;
                     }
                 })
                 .subscribeOn(Schedulers.computation())
