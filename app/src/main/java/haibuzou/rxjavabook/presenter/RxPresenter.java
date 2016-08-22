@@ -1088,6 +1088,7 @@ public class RxPresenter {
                 .subscribe(new Observer<AppInfo>() {
                     @Override
                     public void onCompleted() {
+                        rxView.hideLoading();
                         rxView.showMessage("zip 完成");
                         rxView.setListItem(dataList);
                     }
@@ -1099,6 +1100,7 @@ public class RxPresenter {
 
                     @Override
                     public void onNext(AppInfo appInfo) {
+                        rxView.showLoading();
                         dataList.add(appInfo);
 
                     }
